@@ -1,0 +1,130 @@
+CREATE TABLE [Agent] (
+	AgentID int NOT NULL,
+	FirstName varchar(50) NOT NULL,
+	LastName varchar(50) NOT NULL,
+	Phone varchar(20) NOT NULL,
+	Email varchar(100) NOT NULL,
+	Skills varchar(255) NOT NULL,
+  CONSTRAINT [PK_AGENT] PRIMARY KEY CLUSTERED
+  (
+  [AgentID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+CREATE TABLE [Customer] (
+	CustomerID integer NOT NULL,
+	FirstName varchar(50) NOT NULL,
+	LastName varchar(50) NOT NULL,
+	Phone varchar(20) NOT NULL,
+	Email varchar(100) NOT NULL,
+	AccountDetails text NOT NULL,
+  CONSTRAINT [PK_CUSTOMER] PRIMARY KEY CLUSTERED
+  (
+  [CustomerID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+CREATE TABLE [CallLog] (
+	CallID int NOT NULL,
+	CustomerID int NOT NULL,
+	AgentID int NOT NULL,
+	AcdID int NOT NULL,
+	QueueID int NOT NULL,
+	QueueStartTime datetime NOT NULL,
+	QueueEndTime datetime NOT NULL,
+	CallStartTime datetime NOT NULL,
+	CallEndTime datetime NOT NULL,
+	CallType varchar(20) NOT NULL,
+	CallStatus varchar(20) NOT NULL,
+	CallOutcome text NOT NULL,
+  CONSTRAINT [PK_CALLLOG] PRIMARY KEY CLUSTERED
+  (
+  [CallID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+CREATE TABLE [Queue] (
+	QueueID int NOT NULL,
+	QueueName varchar(100) NOT NULL,
+	Description text NOT NULL,
+  CONSTRAINT [PK_QUEUE] PRIMARY KEY CLUSTERED
+  (
+  [QueueID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+CREATE TABLE [AutomaticCallDistribution] (
+	ACDID int NOT NULL,
+	ACDName varchar(100) NOT NULL,
+	RoutingRules text NOT NULL,
+	Availability boolean NOT NULL,
+  CONSTRAINT [PK_AUTOMATICCALLDISTRIBUTION] PRIMARY KEY CLUSTERED
+  (
+  [ACDID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+CREATE TABLE [AgentSkill] (
+	AgentSkillID int NOT NULL,
+	SkillID int NOT NULL,
+	AgentID int NOT NULL,
+  CONSTRAINT [PK_AGENTSKILL] PRIMARY KEY CLUSTERED
+  (
+  [AgentSkillID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+CREATE TABLE [Skill] (
+	SkillID int NOT NULL,
+	SkillName nvarchar(60) NOT NULL,
+	Description ntext(500) NOT NULL,
+  CONSTRAINT [PK_SKILL] PRIMARY KEY CLUSTERED
+  (
+  [SkillID] ASC
+  ) WITH (IGNORE_DUP_KEY = OFF)
+
+)
+GO
+
+
+ALTER TABLE [CallLog] WITH CHECK ADD CONSTRAINT [CallLog_fk0] FOREIGN KEY ([CustomerID]) REFERENCES [Customer]([CustomerID])
+ON UPDATE CASCADE
+GO
+ALTER TABLE [CallLog] CHECK CONSTRAINT [CallLog_fk0]
+GO
+ALTER TABLE [CallLog] WITH CHECK ADD CONSTRAINT [CallLog_fk1] FOREIGN KEY ([AgentID]) REFERENCES [Agent]([AgentID])
+ON UPDATE CASCADE
+GO
+ALTER TABLE [CallLog] CHECK CONSTRAINT [CallLog_fk1]
+GO
+ALTER TABLE [CallLog] WITH CHECK ADD CONSTRAINT [CallLog_fk2] FOREIGN KEY ([AcdID]) REFERENCES [AutomaticCallDistribution]([ACDID])
+ON UPDATE CASCADE
+GO
+ALTER TABLE [CallLog] CHECK CONSTRAINT [CallLog_fk2]
+GO
+ALTER TABLE [CallLog] WITH CHECK ADD CONSTRAINT [CallLog_fk3] FOREIGN KEY ([QueueID]) REFERENCES [Queue]([QueueID])
+ON UPDATE CASCADE
+GO
+ALTER TABLE [CallLog] CHECK CONSTRAINT [CallLog_fk3]
+GO
+
+
+
+ALTER TABLE [AgentSkill] WITH CHECK ADD CONSTRAINT [AgentSkill_fk0] FOREIGN KEY ([SkillID]) REFERENCES [Skill]([SkillID])
+ON UPDATE CASCADE
+GO
+ALTER TABLE [AgentSkill] CHECK CONSTRAINT [AgentSkill_fk0]
+GO
+ALTER TABLE [AgentSkill] WITH CHECK ADD CONSTRAINT [AgentSkill_fk1] FOREIGN KEY ([AgentID]) REFERENCES [Agent]([AgentID])
+ON UPDATE CASCADE
+GO
+ALTER TABLE [AgentSkill] CHECK CONSTRAINT [AgentSkill_fk1]
+GO
+
+
